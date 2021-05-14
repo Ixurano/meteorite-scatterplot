@@ -1,50 +1,15 @@
 import React from 'react';
 import { useD3 } from '../hooks/useD3';
 import * as d3 from 'd3';
+import formatData from '../helpers/formatData';
 
 const Scatterplot = ({ data }) => {
   console.log('building graph');
-  console.log(data);
 
-
-  const exampleData = [
-    {
-      "name" : "Aachen", 
-      "id" : "1", // unique identifier
-      "nametype": "Valid",  // valid or relict (e.g. has it been preserved or weathered)
-      "recclass": "L5", // classification based on composition, size, etc 
-      "mass": "21", // mass in grams
-      "fall": "Fell", // if it was seen faling or found on the ground
-      "year": "1880-01-01T00:00:00.000",  // What year it fell if data is available
-      "reclat": "50.775000", // differnet formats of spatial data
-      "reclong": "6.083330",
-      "geolocation":
-      {
-        "latitude": "50.775",
-        "longitude": "6.08333"
-      }
-    },
-    {
-      "name": "Aarhus",
-      "id": "2",
-      "nametype": "Valid",
-      "recclass": "H6",
-      "mass": "720",
-      "fall": "Fell",
-      "year": "1951-01-01T00:00:00.000",
-      "reclat": "56.183330",
-      "reclong": "10.233330",
-      "geolocation":
-      {
-        "latitude": "56.18333",
-        "longitude": "10.23333"
-      }
-    }
-  ];
-
-
-
-
+  // input: data, lat, lon
+  // output: [{ name, mass, year, distance } ... ]
+  const formattedData = formatData(data, 50.775 , 6.08333 ); 
+  console.log(formattedData);
 
   const ref = useD3(
     (svg) => {

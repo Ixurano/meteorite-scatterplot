@@ -8,7 +8,7 @@ const Scatterplot = ({ data }) => {
 
   // input: data, lat, lon
   // output: [{ name, mass, year, distance } ... ]
-  const formattedData = formatData(data, 50.775 , 6.08333 ); 
+  const formattedData = formatData(data, 50.775, 6.08333);
   console.log(formattedData);
 
   const ref = useD3(
@@ -16,7 +16,6 @@ const Scatterplot = ({ data }) => {
       const height = 500;
       const width = 900;
       const margin = { top: 20, right: 30, bottom: 30, left: 40 };
-      const barWidth = width / data.length;
 
       const y = d3.scaleLinear()
         .domain([
@@ -36,8 +35,8 @@ const Scatterplot = ({ data }) => {
         .call(y1Axis);
 
       const x = d3.scaleLinear()
-        .domain([255, 0])
-        .range([255, 0])
+        .domain([data.length, 0]) // längden på x-axeln i jämnförelse med datan. OBS denna get fel "1000" istället för de värde vi vill ha "lat"
+        .range([data.length, 0])
         .rangeRound([width - margin.right, margin.left]);
 
       const xAxis = d3.axisBottom()
@@ -47,17 +46,16 @@ const Scatterplot = ({ data }) => {
         .attr('transform', `translate(0,${height - margin.bottom})`)
         .call(xAxis);
 
-      svg
-        .select('.plot')
-        .attr("fill", "#ff0000")
-        .selectAll(".bar")
+      svg.append("g")
+        .attr("stroke", "blue")
+        .attr("stroke-width", 1.5)
+        .attr("fill", "none")
+        .selectAll("circle")
         .data(data)
-        .join("rect")
-        .attr("class", "bar")
-        .attr('x', (d, i) => x(i))
-        .attr('y', (d, i) => y(d))
-        .attr('height', (d) => y(0) - y(d))
-        .attr('width', barWidth);
+        .join("circle")
+        .attr("cx", d => x(d.mass))
+        .attr("cy", d => y(d.distance))
+        .attr("r", 1.5);
     },
     [data.length]
   );

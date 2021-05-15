@@ -83,6 +83,8 @@ const Scatterplot = ({ data }) => {
       <g className='y-axis' />
     </svg>
   );
+
+  
 }
 
 export default Scatterplot;

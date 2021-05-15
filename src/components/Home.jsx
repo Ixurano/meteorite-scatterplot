@@ -17,25 +17,29 @@ import formatData from '../helpers/formatData';
 
 const Home = (props) => {
   const classes = useStyles();
-  const [cordinate, setCordinate] = React.useState('');
-  const [open, setOpen] = React.useState(false);
+  const [cordinate, setCordinate] = React.useState(
+    { "lat": 60.201400, "lon": 24.966100 }
+  );
+
+  // const options = [
+  //   {"lat" : 60.201400, "lon" : 24.966100},
+  //   {"lat" : 38.897700, "lon" : -77.036500},
+  //   {"lat" : 29.979200, "lon" : 31.134200},
+  //   {"lat" : 60.178500, "lon" : 19.915600},
+  //   {"lat" : 48.858400, "lon" : 2.294500},
+  //   {"lat" : 41.890200, "lon" : 12.492200}
+  // ]
+  //const [open, setOpen] = React.useState(false);
 
   const handleChange = (event) => {
-    setCordinate(event.target.value);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  const handleOpen = () => {
-    setOpen(true);
+    setCordinate(JSON.parse(event.target.value));
+    //console.log(event.target.value);
   };
 
   // input: data, lat, lon
   // output: [{ name, mass, year, distance } ... ]
   // const formattedData = formatData(data, 50.775, 6.08333);
-  console.log(props.data);
+  //console.log(props.data);
 
   return (
     <div className={classes.root}>
@@ -43,26 +47,36 @@ const Home = (props) => {
       <Typography variant='h4' component='h2' >Projekt 3 - Avancerad visualisering</Typography>
       <br />
       <div>
-      <FormControl className={classes.formControl}>
-        <InputLabel id="demo-simple-select-error-label">Cordinate</InputLabel>
-        <Select
-          labelId="demo-simple-select-error-label"
-          id="demo-simple-select-error"
-          value={cordinate}
-          onChange={handleChange}
-          //renderValue={(value) => `⚠️  - ${value}`}
-        >
-          <MenuItem value="">
+
+      </div>
+      {props.isLoading ? 'Loading...' :
+
+        <div>
+          <FormControl className={classes.formControl}>
+            <InputLabel id="demo-simple-select-error-label">Cordinate</InputLabel>
+            <Select
+              labelId="demo-simple-select-error-label"
+              id="demo-simple-select-error"
+
+              onChange={handleChange}
+              defaultValue=""
+              value={JSON.stringify(cordinate)}
+            >
+               <MenuItem value="">
             <em>None</em>
           </MenuItem>
-          <MenuItem value={10}>Arcada</MenuItem>
-          <MenuItem value={20}>Pyramiderna</MenuItem>
-          <MenuItem value={30}>The White House</MenuItem>
-        </Select>
-      </FormControl>
-    </div>
-      {props.isLoading ? 'Loading...' :
-        <Scatterplot data={formatData(props.data, 50.775, 6.08333)} />
+              <MenuItem value={JSON.stringify({ "lat": 60.201400, "lon": 24.966100 })}>Arcada</MenuItem>
+              <MenuItem value={JSON.stringify({ "lat": 38.897700, "lon": -77.036500 })}>The white house</MenuItem>
+              <MenuItem value={JSON.stringify({ "lat": 29.979200, "lon": 31.134200 })}>The great pyramid of Giza</MenuItem>
+              <MenuItem value={JSON.stringify({ "lat": 60.178500, "lon": 19.915600 })}>Åland Islands</MenuItem>
+              <MenuItem value={JSON.stringify({ "lat": 48.858400, "lon": 2.294500 })}>Eiffel tower</MenuItem>
+              <MenuItem value={JSON.stringify({ "lat": 41.890200, "lon": 12.492200 })}>Colosseum</MenuItem>
+            </Select>
+          </FormControl>
+
+          <Scatterplot data={formatData(props.data, cordinate.lat, cordinate.lon)} />
+        </div>
+
       }
 
     </div>

@@ -16,14 +16,14 @@ const Scatterplot = ({ data }) => {
     console.log("twas called");
     const height = 500;
     const width = 900;
-    const margin = { top: 50, right: 30, bottom: 30, left: 50 };
+    const margin = { top: 50, right: 30, bottom: 30, left: 70 };
 
     d3.select(ref.current).selectAll("circle").remove();
 
-    const y = d3.scaleLinear()
+    const y = d3.scaleSymlog()
       .domain([
         0,
-        4000000
+        d3.max(data, function (d) { return +d.mass; })
       ])
       .range([0, height - 10])
       .rangeRound([height - margin.bottom, margin.top]);
@@ -37,7 +37,7 @@ const Scatterplot = ({ data }) => {
 
     const x = d3.scaleLinear()
       .domain([
-        data.reduce((data, b) => data.distance > b.distance ? data : b).distance,
+        d3.max(data, function (d) { return +d.distance; }),
         0
       ])
       .range([0, width - 10])
@@ -59,8 +59,17 @@ const Scatterplot = ({ data }) => {
       .join("circle")
       .attr("cx", d => x(d.distance))
       .attr("cy", d => y(d.mass ? d.mass : 0))
-      .attr("id", d => d.name + ' : ' + d.distance + ' : ' + d.mass + ' : ' + d.year)
-      .attr("r", 1.5);
+      .attr("id", d => d.name + ' :distance ' + d.distance + ' :mass ' + d.mass + ' :year ' + d.year)
+      .attr("r", 1.5)
+
+
+      // svg.call(d3.zoom()
+      //   .extent([[0, 0], [width, height]])
+      //   .scaleExtent([1, 10])
+      //   .on("zoom", zoomed));
+      // function zoomed({ transform }) {
+      //   svg.attr("transform", transform);
+    d3.select(ref.current).exit().remove()
       
   }
 

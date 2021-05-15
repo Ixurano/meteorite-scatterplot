@@ -1,30 +1,31 @@
 import React from 'react';
 import { useD3 } from '../hooks/useD3';
 import * as d3 from 'd3';
-import formatData from '../helpers/formatData';
+
 
 const Scatterplot = ({ data }) => {
   console.log('building graph');
+  console.log(data);
 
-  // input: data, lat, lon
-  // output: [{ name, mass, year, distance } ... ]
-  const formattedData = formatData(data, 50.775, 6.08333);
-  console.log(formattedData);
+
 
   const ref = useD3(
     (svg) => {
       const height = 500;
       const width = 900;
-      const margin = { top: 20, right: 30, bottom: 30, left: 40 };
+      const margin = { top: 50, right: 30, bottom: 30, left: 50 };
 
       const y = d3.scaleLinear()
         .domain([
           0,
-          Math.max(
-            d3.max(data),
-          )
+          //4000000
+          //data.reduce((data,b)=>data.mass>b.mass?data:b).mass + 10000
+          //d3.max(data, function(d){return d[mass]})
+          //Math.max(...data.map(o => o.mass), 0)
+           console.log(  Math.max(...data.map(o => o.mass), 0))
+          //console.log( Math.max(...data.map(d => d.mass)))
         ])
-        .range([0, height - 10])
+        .range([0,  height - 10])
         .rangeRound([height - margin.bottom, margin.top]);
 
       const y1Axis = d3.axisLeft()
@@ -35,8 +36,11 @@ const Scatterplot = ({ data }) => {
         .call(y1Axis);
 
       const x = d3.scaleLinear()
-        .domain([data.length, 0]) // längden på x-axeln i jämnförelse med datan. OBS denna get fel "1000" istället för de värde vi vill ha "lat"
-        .range([data.length, 0])
+        .domain([
+          data.reduce((data,b)=>data.distance>b.distance?data:b).distance,
+          0
+        ])
+        .range([0, width - 10])
         .rangeRound([width - margin.right, margin.left]);
 
       const xAxis = d3.axisBottom()
@@ -53,8 +57,9 @@ const Scatterplot = ({ data }) => {
         .selectAll("circle")
         .data(data)
         .join("circle")
-        .attr("cx", d => x(d.mass))
-        .attr("cy", d => y(d.distance))
+        .attr("cx", d => x(d.distance))
+        .attr("cy", d => y(d.mass ? d.mass : 0))
+        .attr("id", d => d.name + ' : ' + d.distance + ' : ' + d.mass + ' : ' + d.year)
         .attr("r", 1.5);
     },
     [data.length]
@@ -64,7 +69,7 @@ const Scatterplot = ({ data }) => {
     <svg
       ref={ref}
       style={{
-        height: 500,
+        height: 600,
         width: '100%',
         marginRight: '0px',
         marginLeft: '0px',

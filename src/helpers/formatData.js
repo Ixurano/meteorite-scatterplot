@@ -30,9 +30,9 @@ const formatData = (data, refLat, refLon) => {
   data.forEach(item => {
     newArr.push({
       name: item.name, 
-      mass: item.mass,
+      mass: parseInt(item.mass),
       year: item.year,
-      distance: calcDistance(parseFloat(item.reclat), parseFloat(item.reclong), refLat, refLon)
+      distance: calcDistance(item.reclat? parseFloat(item.reclat) : 0, item.reclong ? parseFloat(item.reclong) : 0, refLat, refLon)
     });
   });
 

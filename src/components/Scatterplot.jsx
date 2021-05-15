@@ -11,21 +11,23 @@ const Scatterplot = ({ data }) => {
 
   const ref = useD3(
     (svg) => {
+
       const height = 500;
       const width = 900;
-      const margin = { top: 50, right: 30, bottom: 30, left: 50 };
-
-      const y = d3.scaleLinear()
+      const margin = { top: 50, right: 30, bottom: 30, left: 70 };
+//scaleLinear()
+      const y = d3.scaleSymlog()
         .domain([
           0,
           //4000000
           //data.reduce((data,b)=>data.mass>b.mass?data:b).mass + 10000
           //d3.max(data, function(d){return d[mass]})
           //Math.max(...data.map(o => o.mass), 0)
-           console.log(  Math.max(...data.map(o => o.mass), 0))
+          //console.log(  Math.max(...data.map(o => o.mass), 0));
           //console.log( Math.max(...data.map(d => d.mass)))
+          d3.max(data, function (d) { return +d.mass; })
         ])
-        .range([0,  height - 10])
+        .range([0, height - 10])
         .rangeRound([height - margin.bottom, margin.top]);
 
       const y1Axis = d3.axisLeft()
@@ -37,7 +39,8 @@ const Scatterplot = ({ data }) => {
 
       const x = d3.scaleLinear()
         .domain([
-          data.reduce((data,b)=>data.distance>b.distance?data:b).distance,
+          //data.reduce((data,b)=>data.distance>b.distance?data:b).distance
+          d3.max(data, function (d) { return +d.distance; }),
           0
         ])
         .range([0, width - 10])
@@ -59,9 +62,18 @@ const Scatterplot = ({ data }) => {
         .join("circle")
         .attr("cx", d => x(d.distance))
         .attr("cy", d => y(d.mass ? d.mass : 0))
-        .attr("id", d => d.name + ' : ' + d.distance + ' : ' + d.mass + ' : ' + d.year)
+        .attr("id", d => d.name + ' :distance ' + d.distance + ' :mass ' + d.mass + ' :year ' + d.year)
         .attr("r", 1.5);
+
+      // svg.call(d3.zoom()
+      //   .extent([[0, 0], [width, height]])
+      //   .scaleExtent([1, 10])
+      //   .on("zoom", zoomed));
+      // function zoomed({ transform }) {
+      //   svg.attr("transform", transform);
+    svg.exit().remove()
     },
+    
     [data.length]
   );
 
@@ -82,6 +94,8 @@ const Scatterplot = ({ data }) => {
       <g className='y-axis' />
     </svg>
   );
+
+  
 }
 
 export default Scatterplot;

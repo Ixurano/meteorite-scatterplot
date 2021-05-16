@@ -31,10 +31,13 @@ const Home = (props) => {
       <Typography variant='h3' component='h1' className={classes.title}>Visualisering av information</Typography>
       <Typography variant='h4' component='h2' >Projekt 3 - Avancerad visualisering</Typography>
       <br />
-      <div>
-
-      </div>
-      {props.isLoading ? 'Loading...' :
+      <Typography variant='body1' component='p' >
+        Det här är en scatterplott över meteorit massa(g) i förhållande till avstånd(km) från en kordinat.
+        Datan hämtas från NASAs open data tjänst på <a href="https://data.nasa.gov/Space-Science/Meteorite-Landings/gh4g-9sfh">data.nasa.gov</a>.
+        Alla värden finns inte tillgängliga för alla meteoriter i datasettet så meteoriter utan massa har fått värdet 1.
+      </Typography>
+      <br />
+      {props.isLoading ? 'Loading graph...' :
 
         <div>
           <FormControl className={classes.formControl}>
@@ -55,14 +58,15 @@ const Home = (props) => {
             </Select>
           </FormControl>
 
-          {/* // input: data, lat, lon
-              // output: [{ name, mass, year, distance } ... ]
-              // const formattedData = formatData(data, 50.775, 6.08333); */}
           <Scatterplot data={formatData(props.data, cordinate.lat, cordinate.lon)} />
         </div>
-
       }
 
+      <Typography variant='h5' component='h3' style={{ marginTop: '1rem' }}>Raport</Typography>
+
+      <Typography variant='body1' component='p' >
+        Kanske vi har raporten här?
+      </Typography>
     </div>
   );
 }

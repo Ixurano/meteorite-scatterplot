@@ -30,8 +30,8 @@ const formatData = (data, refLat, refLon) => {
   data.forEach(item => {
     newArr.push({
       name: item.name, 
-      mass: parseInt(item.mass),
-      year: item.year,
+      mass: parseInt(item.mass) ? parseInt(item.mass) : 1, // scaleLog can't handle zero so if the number is not set, set it 1
+      year: new Date(item.year).getFullYear(),
       distance: calcDistance(item.reclat? parseFloat(item.reclat) : 0, item.reclong ? parseFloat(item.reclong) : 0, refLat, refLon)
     });
   });

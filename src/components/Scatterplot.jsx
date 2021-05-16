@@ -15,7 +15,7 @@ const Scatterplot = ({ data }) => {
   const ref = useD3(initiateGraph, [data.lenght]);
   const height = 500;
   const width = 900;
-  const margin = { top: 50, right: 30, bottom: 30, left: 70 };
+  const margin = { top: 50, right: 30, bottom: 30, left: 30 };
 
   console.log('building graph');
   console.log(data);
@@ -31,11 +31,11 @@ const Scatterplot = ({ data }) => {
     .rangeRound([height - margin.bottom, margin.top]);
 
   const xAxis = d3.axisBottom()
-    .scale(x);
+    .scale(x)
 
   const y1Axis = d3.axisLeft()
     .scale(y)
-    .ticks(20, "~s");
+    .ticks(20, "~s")
 
   const grid = g => g
     .attr("stroke", "currentColor")
@@ -92,12 +92,24 @@ const Scatterplot = ({ data }) => {
   // This function draws the graph one time at the start 
   function initiateGraph() {
     d3.select(ref.current).select('.y-axis')
+      .call(y1Axis)
       .attr("transform", `translate(${margin.left},0)`)
-      .call(y1Axis);
+      .append("text")
+      .attr("x", -margin.left)
+      .attr("y", 30)
+      .attr("fill", "currentColor")
+      .attr("text-anchor", "start")
+      .text("massa(g)");
 
     d3.select(ref.current).select('.x-axis')
       .attr('transform', `translate(0,${height - margin.bottom})`)
-      .call(xAxis);
+      .call(xAxis)
+      .append("text")
+      .attr("x", width)
+      .attr("y", margin.bottom - 4)
+      .attr("fill", "currentColor")
+      .attr("text-anchor", "end")
+      .text("km");
 
     d3.select(ref.current)
       .selectAll("circle")

@@ -38,25 +38,55 @@ const Scatterplot = ({ data }) => {
     .ticks(20, "~s");
 
   const grid = g => g
-  .attr("stroke", "currentColor")
-  .attr("stroke-opacity", 0.1)
-  .call(g => g.append("g")
-    .selectAll("line")
-    .data(x.ticks())
-    .join("line")
+    .attr("stroke", "currentColor")
+    .attr("stroke-opacity", 0.1)
+    .call(g => g.append("g")
+      .attr("class", "y-grid")
+      .selectAll("line")
+      .data(x.ticks())
+      .join("line")
+      .transition()
+      .duration(0)
       .attr("x1", d => 0.5 + x(d))
       .attr("x2", d => 0.5 + x(d))
       .attr("y1", margin.top)
       .attr("y2", height - margin.bottom)
-      )
-  .call(g => g.append("g")
-    .selectAll("line")
-    .data(y.ticks())
-    .join("line")
+    )
+    .call(g => g.append("g")
+      .attr("class", "x-grid")
+      .selectAll("line")
+      .data(y.ticks())
+      .join("line")
+      .transition()
+      .duration(0)
       .attr("y1", d => 0.5 + y(d))
       .attr("y2", d => 0.5 + y(d))
       .attr("x1", margin.left)
       .attr("x2", width - margin.right));
+  
+  const gridUpdater = (duration) => {
+    d3.select(ref.current).select('.y-grid')
+    .selectAll("line")
+    .data(y.ticks())
+    .join("line")
+      .transition()
+      .duration(duration)
+      .attr("y1", d => 0.5 + y(d))
+      .attr("y2", d => 0.5 + y(d))
+      .attr("x1", margin.left)
+      .attr("x2", width - margin.right);
+
+      d3.select(ref.current).select('.x-grid')
+      .selectAll("line")
+      .data(x.ticks())
+      .join("line")
+        .transition()
+        .duration(duration)
+        .attr("x1", d => 0.5 + x(d))
+        .attr("x2", d => 0.5 + x(d))
+        .attr("y1", margin.top)
+        .attr("y2", height - margin.bottom);
+  }
 
 
   // This function draws the graph one time at the start 
@@ -81,6 +111,7 @@ const Scatterplot = ({ data }) => {
       .attr("fill", "#1976d2")
 
     d3.select(ref.current).call(grid);
+    gridUpdater(0);
 
     d3.select(ref.current).exit().remove()
   }
@@ -103,6 +134,8 @@ const Scatterplot = ({ data }) => {
       .duration(1000)
       .attr('transform', `translate(0,${height - margin.bottom})`)
       .call(xAxis);
+
+    gridUpdater(1000);
   }
 
   updateGraph();
@@ -118,9 +151,9 @@ const Scatterplot = ({ data }) => {
           marginLeft: '0px',
         }}
       >
-        <g className='plot' />
         <g className='x-axis' />
         <g className='y-axis' />
+     
       </svg>
       <Slider
         track="inverted"

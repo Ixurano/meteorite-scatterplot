@@ -5,29 +5,24 @@ import * as d3 from 'd3';
 
 const Scatterplot = ({ data }) => {
   const ref = useD3(initiateGraph, [data.lenght]);
-
-  console.log('building graph');
-  console.log(data);
-
   const height = 500;
   const width = 900;
   const margin = { top: 50, right: 30, bottom: 30, left: 70 };
 
+  console.log('building graph');
+  console.log(data);
+
   const x = d3.scaleLinear()
-    .domain([
-      d3.max(data, function (d) { return +d.distance; }), 0
-    ])
+    .domain([d3.max(data, function (d) { return +d.distance; }), 0])
     .range([0, width - 10])
     .rangeRound([width - margin.right, margin.left]);
 
   const y = d3.scaleSymlog()
-    .domain([
-      0, d3.max(data, function (d) { return +d.mass; }) 
-    ])
+    .domain([0, d3.max(data, function (d) { return +d.mass; })])
     .range([0, height - 10])
     .rangeRound([height - margin.bottom, margin.top]);
 
-    const xAxis = d3.axisBottom()
+  const xAxis = d3.axisBottom()
     .scale(x);
 
   const y1Axis = d3.axisLeft()
@@ -36,8 +31,6 @@ const Scatterplot = ({ data }) => {
 
   // This function draws the graph one time at the start 
   function initiateGraph() {
-    d3.select(ref.current).selectAll("circle").remove();
-
     d3.select(ref.current).select('.y-axis')
       .attr("transform", `translate(${margin.left},0)`)
       .call(y1Axis);
@@ -47,14 +40,13 @@ const Scatterplot = ({ data }) => {
       .call(xAxis);
 
     d3.select(ref.current)
-      // .append("g")
-      // .attr("stroke", "blue")
-      // .attr("stroke-width", 1.5)
-      // .attr("fill", "none")
       .selectAll("circle")
       .data(data)
       .enter()
       .append("circle")
+      .attr("stroke", "blue")
+      .attr("stroke-width", 1.5)
+      .attr("fill", "none")
       .attr("cx", d => x(d.distance))
       .attr("cy", d => y(d.mass ? d.mass : 0))
       .attr("id", d => d.name + ' :distance ' + d.distance + ' :mass ' + d.mass + ' :year ' + d.year)
@@ -79,7 +71,13 @@ const Scatterplot = ({ data }) => {
       .attr("cx", d => x(d.distance))
       .attr("cy", d => y(d.mass ? d.mass : 0))
       .attr("id", d => d.name + ' :distance ' + d.distance + ' :mass ' + d.mass + ' :year ' + d.year)
-      .attr("r", 1.5)
+      .attr("r", 1.5);
+
+    d3.select(ref.current).select('.x-axis')
+      .transition()
+      .duration(1000)
+      .attr('transform', `translate(0,${height - margin.bottom})`)
+      .call(xAxis);
   }
 
   updateGraph();

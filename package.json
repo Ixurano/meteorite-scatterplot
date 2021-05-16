@@ -2,6 +2,7 @@
   "name": "vai21-p3-petterson-nylund",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://people.arcada.fi/~petterto/Projekt-3-vai21/",
   "dependencies": {
     "@material-ui/core": "^4.11.4",
     "@testing-library/jest-dom": "^5.11.4",

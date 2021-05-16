@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useD3 } from '../hooks/useD3';
 import * as d3 from 'd3';
 
@@ -13,7 +13,6 @@ const Scatterplot = ({ data }) => {
   };
 
   const updateGraph = () => {
-    console.log("twas called");
     const height = 500;
     const width = 900;
     const margin = { top: 50, right: 30, bottom: 30, left: 70 };
@@ -83,7 +82,6 @@ const Scatterplot = ({ data }) => {
         width: '100%',
         marginRight: '0px',
         marginLeft: '0px',
-
       }}
     >
       <g className='plot' />
